@@ -1,1 +1,2 @@
 print("mouse")
+print("Раушан")
