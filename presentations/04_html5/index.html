@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Урок 4: HTML5, семантика и веб-формы | Сайт школы Квант</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="presentation-container">
+    
+    <!-- Слайд 1: Титульный -->
+    <div class="slide active">
+      <div class="slide-header">
+        <h2>HTML5: Семантическая верстка и веб-формы</h2>
+      </div>
+      <div class="slide-body" style="text-align: center; justify-content: center;">
+        <h1 style="color: var(--primary-color); font-size: 2.8rem; margin-bottom: 20px;">Проектирование сайта летней школы «Квант»</h1>
+        <p style="font-size: 1.5rem; color: var(--text-color); margin-bottom: 30px;">Разметка интерфейса, семантическая структура и сбор данных от пользователей</p>
+        <div class="badge badge-primary" style="font-size: 1.1rem; padding: 8px 15px;">Урок 4</div>
+        <div class="badge badge-secondary" style="font-size: 1.1rem; padding: 8px 15px;">Курс: Веб-разработка на Python и Django</div>
+        <p style="margin-top: 40px; color: #7f8c8d; font-size: 1rem;">ЛФМШ «Квант» • 2026</p>
+      </div>
+    </div>
+
+    <!-- Слайд 2: Концепция единого проекта -->
+    <div class="slide">
+      <div class="slide-header">
+        <h2>Концепция проекта: Сайт школы «Квант»</h2>
+      </div>
+      <div class="slide-body">
+        <div class="columns">
+          <div class="column">
+            <p>Мы разрабатываем полноценный интерфейс для летней школы. Сегодня мы создадим <strong>статический макет</strong>, который позже интегрируем с Django:</p>
+            <ul>
+              <li><strong>Главная страница:</strong> Общая информация, направления обучения (физ-мат, IT, хим-био).</li>
+              <li><strong>Сетка расписания:</strong> Табличная структура ежедневных занятий и лекций.</li>
+              <li><strong>Карточка события:</strong> Страница с деталями научно-популярного мероприятия.</li>
+              <li><strong>Форма регистрации:</strong> Сбор заявок от будущих участников лагеря.</li>
+            </ul>
+          </div>
+          <div class="column">
+            <div class="highlight-box success">
+              <strong>Наша цель сегодня:</strong> Научиться правильно размечать текст, создавать семантический каркас сайта и проектировать интерактивные формы, которые подготовят нас к приему POST-запросов в Django.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Слайд 3: Что такое HTML5? -->
+    <div class="slide">
+      <div class="slide-header">
+        <h2>Что такое HTML5? Роль в веб-приложении</h2>
+      </div>
+      <div class="slide-body">
+        <div class="columns">
+          <div class="column">
+            <p><strong>HTML (HyperText Markup Language)</strong> — это язык разметки, определяющий структуру и каркас веб-страницы. Он интерпретируется браузером.</p>
+            <ul>
+              <li><strong>Это не язык программирования!</strong> В нем нет переменных, циклов или логических условий.</li>
+              <li><strong>Аналогия:</strong> HTML — это несущий каркас и стены дома; CSS — его отделка и дизайн; JavaScript — интерактивное оборудование; Django — фундамент и инженерные коммуникации.</li>
+            </ul>
+          </div>
+          <div class="column">
+            <div class="highlight-box">
+              <strong>Связь с Django:</strong> Django-шаблоны отдают именно HTML-код. Браузер пользователя видит только HTML, CSS и JS, но не видит код на Python!
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Слайд 4: Структура HTML-документа -->
+    <div class="slide">
+      <div class="slide-header">
+        <h2>Базовая структура HTML-документа</h2>
+      </div>
+      <div class="slide-body">
+        <div class="columns">
+          <div class="column" style="flex: 1.2;">
+            <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="ru"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Сайт школы Квант&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;!-- Контент страницы пишется здесь --&gt;
+    &lt;h1&gt;Добро пожаловать в Квант!&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+          </div>
+          <div class="column" style="flex: 0.8;">
+            <ul>
+              <li><code>&lt;!DOCTYPE html&gt;</code> — объявление стандарта HTML5.</li>
+              <li><code>&lt;html&gt;</code> — корневой элемент.</li>
+              <li><code>&lt;head&gt;</code> — метаданные (кодировка, заголовок вкладки, стили).</li>
+              <li><code>&lt;body&gt;</code> — видимый контент.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Слайд 5: Анатомия тегов и атрибутов -->
+    <div class="slide">
+      <div class="slide-header">
+        <h2>Анатомия тегов и атрибуты</h2>
+      </div>
+      <div class="slide-body">
+        <p>Теги бывают <strong>парными</strong> (контейнеры для текста/других тегов) и <strong>одиночными</strong> (вставляют элементы в страницу).</p>
+        <div class="highlight-box">
+          <code style="font-size: 1.25rem;">&lt;имя_тега имя_атрибута="значение"&gt; Содержимое &lt;/имя_тега&gt;</code>
+        </div>
+        <p style="margin-top: 15px;">Примеры для сайта школы «Квант»:</p>
+        <ul>
+          <li><strong>Парный тег (ссылка на расписание):</strong> <br>
+              <code>&lt;a href="/schedule.html" target="_blank"&gt;Посмотреть расписание&lt;/a&gt;</code></li>
+          <li><strong>Одиночный тег (логотип лагеря):</strong> <br>
+              <code>&lt;img src="logo.png" alt="Логотип Кванта" width="150"&gt;</code></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Слайд 6: Вложенность тегов и DOM-дерево -->
+    <div class="slide">
+      <div class="slide-header">
+        <h2>Вложенность тегов и дерево DOM</h2>
+      </div>
+      <div class="slide-body">
+        <div class="columns">
+          <div class="column">
+            <p><strong>Правило «матрешки»:</strong> теги, которые открываются позже, должны закрываться раньше.</p>
+            <div class="highlight-box warning">
+              ❌ Неверно: <code>&lt;p&gt;Мы изучаем &lt;strong&gt;HTML5&lt;/p&gt;&lt;/strong&gt;</code><br>
+              ✅ Верно: <code>&lt;p&gt;Мы изучаем &lt;strong&gt;HTML5&lt;/strong&gt;&lt;/p&gt;</code>
+            </div>
+            <p>Браузер строит из тегов <strong>DOM (Document Object Model)</strong> — древовидную структуру, где элементы являются родителями или потомками друг друга.</p>
+          </div>
+          <div class="column">
+            <p><strong>Типы элементов:</strong></p>
+            <ul>
+              <li><strong>Блочные (block):</strong> Занимают всю ширину строки, начинаются с новой строки (<code>&lt;div&gt;</code>, <code>&lt;p&gt;</code>, <code>&lt;h1&gt;</code>, <code>&lt;ul&gt;</code>).</li>
+              <li><strong>Строчные (inline):</strong> Располагаются внутри текста, ширина зависит от контента (<code>&lt;span&gt;</code>, <code>&lt;a&gt;</code>, <code>&lt;strong&gt;</code>, <code>&lt;em&gt;</code>).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Слайд 7: Текстовые элементы сайта -->
+    <div class="slide">
+      <div class="slide-header">
+        <h2>Текстовая разметка на сайте «Кванта»</h2>
+      </div>
+      <div class="slide-body">
+        <div class="columns">
+          <div class="column">
+            <ul>
+              <li><strong>Заголовки:</strong> <code>&lt;h1&gt;</code> до <code>&lt;h6&gt;</code>. <code>&lt;h1&gt;</code> — главный заголовок (название страницы). Он должен быть строго один!</li>
+              <li><strong>Абзацы:</strong> Тег <code>&lt;p&gt;</code> для группировки предложений.</li>
+              <li><strong>Списки:</strong> 
+                <ul>
+                  <li><code>&lt;ul&gt;</code> — маркированный список направлений.</li>
+                  <li><code>&lt;ol&gt;</code> — нумерованный список шагов регистрации.</li>
+                  <li><code>&lt;li&gt;</code> — элемент списка (всегда внутри <code>&lt;ul&gt;</code>/<code>&lt;ol&gt;</code>).</li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+          <div class="column">
+            <pre><code>&lt;h2&gt;Наши направления&lt;/h2&gt;
+&lt;ul&gt;
+    &lt;li&gt;Физико-математическое&lt;/li&gt;
+    &lt;li&gt;Информационные технологии&lt;/li&gt;
+    &lt;li&gt;Химико-биологическое&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Слайд 8: Ссылки и изображения -->
+    <div class="slide">
+      <div class="slide-header">
+        <h2>Ссылки и изображения</h2>
+      </div>
+      <div class="slide-body">
+        <div class="columns">
+          <div class="column">
+            <p><strong>Изображения (<code>&lt;img&gt;</code>):</strong></p>
+            <ul>
+              <li>Атрибут <code>src</code> — путь к файлу.</li>
+              <li>Атрибут <code>alt</code> — альтернативный текст (для SEO, скринридеров и при сбоях сети). Обязателен!</li>
+            </ul>
+            <p><strong>Ссылки (<code>&lt;a&gt;</code>):</strong></p>
+            <ul>
+              <li>Атрибут <code>href</code> указывает на URL.</li>
+              <li>Атрибут <code>target="_blank"</code> открывает ссылку в новой вкладке.</li>
+            </ul>
+          </div>
+          <div class="column">
+            <div class="highlight-box">
+              <strong>Пример связывания страниц:</strong>
+              <pre><code>&lt;a href="event.html"&gt;
+  &lt;img src="camp.jpg" alt="Кампус лагеря Квант"&gt;
+  &lt;p&gt;Узнать подробнее о смене&lt;/p&gt;
+&lt;/a&gt;</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Слайд 9: Проблема «div-супа» -->
+    <div class="slide">
+      <div class="slide-header">
+        <h2>Проблема «div-супа» и семантика HTML5</h2>
+      </div>
+      <div class="slide-body">
+        <div class="columns">
+          <div class="column">
+            <p>Раньше разработчики создавали всю структуру с помощью безликих тегов <code>&lt;div&gt;</code>:</p>
+            <pre style="margin: 5px 0;"><code>&lt;div class="header"&gt;...&lt;/div&gt;
+&lt;div class="menu"&gt;...&lt;/div&gt;
+&lt;div class="sidebar"&gt;...&lt;/div&gt;</code></pre>
+            <p>Это делало разметку «слепой» для поисковиков и скринридеров.</p>
+          </div>
+          <div class="column">
+            <div class="highlight-box warning">
+              <strong>Почему это плохо?</strong> Поисковые роботы (Яндекс, Google) не могут понять, где важный контент, а где реклама или меню. Программы для незрячих пользователей не могут озвучить структуру страницы.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Слайд 10: Семантическая структура «Кванта» -->
+    <div class="slide">
+      <div class="slide-header">
+        <h2>Семантические элементы HTML5</h2>
+      </div>
+      <div class="slide-body">
+        <p>HTML5 вводит теги, которые сообщают браузеру и поисковикам о <strong>роли</strong> содержимого:</p>
+        <div class="columns">
+          <div class="column">
+            <ul>
+              <li><code>&lt;header&gt;</code> — шапка сайта (логотип, название лагеря).</li>
+              <li><code>&lt;nav&gt;</code> — навигационная панель (меню страниц).</li>
+              <li><code>&lt;main&gt;</code> — уникальное основное содержимое страницы.</li>
+              <li><code>&lt;aside&gt;</code> — боковая панель (список кружков, контакты).</li>
+              <li><code>&lt;footer&gt;</code> — подвал (копирайт, ссылки на соцсети).</li>
+            </ul>
+          </div>
+          <div class="column">
+            <div class="highlight-box success">
+              <strong>Принцип семантики:</strong> Использовать тег, соответствующий смыслу данных. Это улучшает SEO (поисковую выдачу) и доступность сайта.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Слайд 11: Разметка контента: article и section -->
+    <div class="slide">
+      <div class="slide-header">
+        <h2>Разметка контента: Section и Article</h2>
+      </div>
+      <div class="slide-body">
+        <div class="columns">
+          <div class="column">
+            <p>Внутри тега <code>&lt;main&gt;</code> мы структурируем данные с помощью:</p>
+            <ul>
+              <li><code>&lt;section&gt;</code> — логический блок или раздел (например, секция «О лагере», секция «Контакты»). Обычно содержит свой заголовок <code>&lt;h2&gt;</code>-<code>&lt;h6&gt;</code>.</li>
+              <li><code>&lt;article&gt;</code> — независимый, самодостаточный блок контента (новость, анонс лекции, пост в блоге). Его можно вырезать и перенести на другой сайт, и смысл не потеряется.</li>
+            </ul>
+          </div>
+          <div class="column">
+            <pre><code>&lt;section id="news"&gt;
+    &lt;h2&gt;Новости лагеря&lt;/h2&gt;
+    &lt;article&gt;
+        &lt;h3&gt;Открытие IT-смены!&lt;/h3&gt;
+        &lt;p&gt;Сегодня стартовала смена...&lt;/p&gt;
+    &lt;/article&gt;
+&lt;/section&gt;</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Слайд 12: Формы в HTML: GET и POST -->
+    <div class="slide">
+      <div class="slide-header">
+        <h2>Анатомия веб-форм: Тег &lt;form&gt;</h2>
+      </div>
+      <div class="slide-body">
+        <div class="columns">
+          <div class="column">
+            <p><strong>Форма (<code>&lt;form&gt;</code>)</strong> — это область интерфейса для ввода и передачи данных на сервер.</p>
+            <ul>
+              <li>Атрибут <code>action</code> — URL-адрес обработчика на сервере (например, Django view).</li>
+              <li>Атрибут <code>method</code> — метод HTTP-запроса:
+                <ul>
+                  <li><strong>GET:</strong> Данные передаются в строке URL (поиск, фильтрация).</li>
+                  <li><strong>POST:</strong> Данные передаются скрыто в теле запроса (регистрация, отправка паролей).</li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+          <div class="column">
+            <div class="highlight-box">
+              <strong>Форма записи в Квант:</strong>
+              <pre><code>&lt;form action="/register/" method="POST"&gt;
+    &lt;!-- Поля ввода будут здесь --&gt;
+    &lt;button type="submit"&gt;Отправить&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Слайд 13: Поля ввода: input текстовые -->
+    <div class="slide">
+      <div class="slide-header">
+        <h2>Текстовые поля ввода</h2>
+      </div>
+      <div class="slide-body">
+        <p>Элемент <code>&lt;input&gt;</code> — основной интерактивный элемент. Тип ввода определяется атрибутом <code>type</code>.</p>
+        <div class="columns">
+          <div class="column">
+            <ul>
+              <li><strong>Обычный текст (Имя):</strong> <br>
+                  <code>&lt;input type="text" placeholder="Введите имя"&gt;</code></li>
+              <li><strong>Пароль (скрытые символы):</strong> <br>
+                  <code>&lt;input type="password" placeholder="Придумайте пароль"&gt;</code></li>
+              <li><strong>Электронная почта (с автовалидацией):</strong> <br>
+                  <code>&lt;input type="email" placeholder="example@mail.com"&gt;</code></li>
+            </ul>
+          </div>
+          <div class="column">
+            <div class="highlight-box success">
+              <strong>Элемент <code>&lt;label&gt;</code>:</strong> связывает текстовое описание с полем с помощью атрибута <code>for</code> и <code>id</code>. Это увеличивает область клика!
+              <pre style="margin: 5px 0;"><code>&lt;label for="username"&gt;Логин:&lt;/label&gt;
+&lt;input id="username" type="text"&gt;</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Слайд 14: Специализированные input-типы -->
+    <div class="slide">
+      <div class="slide-header">
+        <h2>Специализированные типы ввода</h2>
+      </div>
+      <div class="slide-body">
+        <p>HTML5 предлагает множество встроенных типов ввода, которые автоматически проверяются браузером и предоставляют удобные виджеты (например, календарь на смартфонах):</p>
+        <ul>
+          <li><strong>Числа (<code>type="number"</code>):</strong> Ввод возраста или класса школьника. Поддерживает атрибуты <code>min</code> и <code>max</code>. <br>
+              <code>&lt;input type="number" min="7" max="11" value="9"&gt;</code></li>
+          <li><strong>Дата (<code>type="date"</code>):</strong> Выбор даты рождения или начала смены с помощью встроенного календаря. <br>
+              <code>&lt;input type="date" min="2026-06-01" max="2026-08-31"&gt;</code></li>
+          <li><strong>Телефон (<code>type="tel"</code>):</strong> Поле для номера телефона. <br>
+              <code>&lt;input type="tel" pattern="[0-9]{11}" placeholder="89991234567"&gt;</code></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Слайд 15: Выбор вариантов: Radio и Checkbox -->
+    <div class="slide">
+      <div class="slide-header">
+        <h2>Чекбоксы и радиокнопки</h2>
+      </div>
+      <div class="slide-body">
+        <div class="columns">
+          <div class="column">
+            <p><strong>Радиокнопки (<code>type="radio"</code>):</strong> Выбор <em>одного</em> варианта из нескольких. Важно: у них должен быть <strong>одинаковый атрибут <code>name</code></strong> для объединения в группу!</p>
+            <pre><code>&lt;p&gt;Выберите направление:&lt;/p&gt;
+&lt;input type="radio" id="dir-it" name="direction" value="it"&gt;
+&lt;label for="dir-it"&gt;IT-технологии&lt;/label&gt;
+&lt;input type="radio" id="dir-ph" name="direction" value="physics"&gt;
+&lt;label for="dir-ph"&gt;Физика&lt;/label&gt;</code></pre>
+          </div>
+          <div class="column">
+            <p><strong>Чекбоксы (<code>type="checkbox"</code>):</strong> Независимый выбор нескольких вариантов (или согласие с правилами).</p>
+            <pre><code>&lt;input type="checkbox" id="rules" name="agree" required&gt;
+&lt;label for="rules"&gt;Согласен с правилами&lt;/label&gt;</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Слайд 16: Списки выбора и текстовые области -->
+    <div class="slide">
+      <div class="slide-header">
+        <h2>Выпадающие списки и многострочный ввод</h2>
+      </div>
+      <div class="slide-body">
+        <div class="columns">
+          <div class="column">
+            <p><strong>Выпадающий список (<code>&lt;select&gt;</code> и <code>&lt;option&gt;</code>):</strong><br>
+            Удобен для экономии места на экране, когда вариантов много.</p>
+            <pre><code>&lt;label for="camp-shift"&gt;Смена:&lt;/label&gt;
+&lt;select id="camp-shift" name="shift"&gt;
+    &lt;option value="1"&gt;Июньская научная&lt;/option&gt;
+    &lt;option value="2"&gt;Июльская IT-смена&lt;/option&gt;
+    &lt;option value="3"&gt;Августовская хим-био&lt;/option&gt;
+&lt;/select&gt;</code></pre>
+          </div>
+          <div class="column">
+            <p><strong>Текстовое поле (<code>&lt;textarea&gt;</code>):</strong><br>
+            Используется для длинного произвольного текста (мотивационное письмо, вопросы, комментарии).</p>
+            <pre><code>&lt;label for="letter"&gt;О себе:&lt;/label&gt;
+&lt;textarea id="letter" name="bio" rows="4" cols="30" placeholder="Расскажите о своих достижениях..."&gt;&lt;/textarea&gt;</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Слайд 17: Валидация на стороне клиента -->
+    <div class="slide">
+      <div class="slide-header">
+        <h2>Валидация данных в HTML5</h2>
+      </div>
+      <div class="slide-body">
+        <p><strong>Валидация</strong> — это проверка корректности введенных данных до их отправки на сервер. HTML5 поддерживает встроенные атрибуты проверки:</p>
+        <ul>
+          <li><code>required</code> — поле не может быть отправлено пустым.</li>
+          <li><code>minlength</code> / <code>maxlength</code> — ограничение по числу символов (например, пароль не менее 8 символов).</li>
+          <li><code>min</code> / <code>max</code> — числовые ограничения.</li>
+          <li><code>pattern</code> — проверка с помощью регулярных выражений (например, формат телефона).</li>
+        </ul>
+        <div class="highlight-box warning">
+          <strong>Важное предупреждение:</strong> Клиентская валидация легко обходится продвинутыми пользователями (через DevTools). Поэтому бэкенд на Django <em>всегда</em> должен дублировать проверки!
+        </div>
+      </div>
+    </div>
+
+    <!-- Слайд 18: Связь Front-end и Back-end -->
+    <div class="slide">
+      <div class="slide-header">
+        <h2>Связь с Django: Ключевая роль атрибута name</h2>
+      </div>
+      <div class="slide-body">
+        <div class="columns">
+          <div class="column" style="flex: 1.1;">
+            <p>Как Django узнает, какие данные прислал пользователь?</p>
+            <p>Каждое поле формы обязано иметь атрибут <strong><code>name</code></strong>. При отправке формы браузер формирует пары <code>ключ=значение</code>:</p>
+            <div class="highlight-box" style="font-family: monospace; font-size: 0.9rem;">
+              имя_поля_1=значение_1&имя_поля_2=значение_2
+            </div>
+            <p>В Python-коде Django мы извлекаем эти данные по ключам:</p>
+            <pre style="margin: 5px 0;"><code>student_name = request.POST.get('username')</code></pre>
+          </div>
+          <div class="column" style="flex: 0.9;">
+            <div class="highlight-box success">
+              <strong>Правило разработчика:</strong>
+              <ul>
+                <li><code>id</code> — используется для связывания с <code>&lt;label&gt;</code> и стилей (CSS).</li>
+                <li><code>name</code> — передается на сервер и используется бэкендом (Django).</li>
+              </ul>
+              Без <code>name</code> поле вообще не будет отправлено на сервер!
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Слайд 19: Пример страницы регистрации Кванта -->
+    <div class="slide">
+      <div class="slide-header">
+        <h2>Реализация формы регистрации</h2>
+      </div>
+      <div class="slide-body">
+        <div class="columns">
+          <div class="column" style="flex: 1.1;">
+            <pre style="font-size: 0.85rem; margin: 0;"><code>&lt;form action="/apply/" method="POST"&gt;
+  &lt;p&gt;
+    &lt;label for="fio"&gt;ФИО:&lt;/label&gt;
+    &lt;input id="fio" type="text" name="student_fio" required&gt;
+  &lt;/p&gt;
+  &lt;p&gt;
+    &lt;label for="email"&gt;Email:&lt;/label&gt;
+    &lt;input id="email" type="email" name="student_email" required&gt;
+  &lt;/p&gt;
+  &lt;p&gt;
+    &lt;label for="shift"&gt;Смена:&lt;/label&gt;
+    &lt;select id="shift" name="selected_shift"&gt;
+      &lt;option value="it"&gt;IT-смена&lt;/option&gt;
+      &lt;option value="fm"&gt;Физ-мат смена&lt;/option&gt;
+    &lt;/select&gt;
+  &lt;/p&gt;
+  &lt;button type="submit"&gt;Зарегистрироваться&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+          </div>
+          <div class="column" style="flex: 0.9;">
+            <p><strong>Почему именно так?</strong></p>
+            <ul>
+              <li>Теги сгруппированы через абзацы <code>&lt;p&gt;</code> для базового отступа.</li>
+              <li>Все поля валидируются (<code>required</code>, <code>type="email"</code>).</li>
+              <li>Каждое поле имеет уникальный <code>name</code>, который совпадает с именами полей в бэкенде.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Слайд 20: Итоги и домашнее задание -->
+    <div class="slide">
+      <div class="slide-header">
+        <h2>Итоги урока и домашнее задание</h2>
+      </div>
+      <div class="slide-body">
+        <div class="columns">
+          <div class="column">
+            <p><strong>Что мы сегодня освоили:</strong></p>
+            <ul>
+              <li>Структуру HTML и отличие от языков программирования.</li>
+              <li>Семантическую разметку HTML5: от <code>div-супа</code> к смысловым тегам.</li>
+              <li>Веб-формы, типы полей <code>input</code> и основы валидации.</li>
+              <li>Связующую роль атрибута <code>name</code> между версткой и Django.</li>
+            </ul>
+          </div>
+          <div class="column">
+            <div class="highlight-box success">
+              <strong>Домашнее задание:</strong>
+              Создать четыре связанных статических HTML-страницы для «Сайта Кванта»: главную (семантический каркас), сетку расписания (таблица), карточку мероприятия и интерактивную форму регистрации участников со всеми типами валидации.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Управление презентацией -->
+    <div class="controls">
+      <button class="control-btn" id="prev-btn">Назад</button>
+      <button class="control-btn" id="next-btn">Вперед</button>
+      <button class="control-btn" id="fullscreen-btn">Фокус (F)</button>
+    </div>
+
+    <!-- Счетчик слайдов -->
+    <div class="slide-counter" id="slide-counter">1 / 20</div>
+
+    <!-- Прогресс-бар -->
+    <div class="progress-container">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

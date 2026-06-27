@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Урок 2: Python Advanced для веб-разработки — Сайт летней школы "Квант"</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+
+  <div class="presentation-container">
+
+    <!-- Слайд 1: Титульный -->
+    <div class="slide active">
+      <div class="slide-body" style="text-align: center;">
+        <span class="badge badge-primary" style="margin-bottom: 20px; font-size: 1.1rem; padding: 6px 12px;">ЛФМШ "Квант" — 2026</span>
+        <h1 style="font-size: 2.8rem; color: var(--primary-color); margin-bottom: 20px; font-weight: 800; line-height: 1.2;">
+          Python Advanced:<br>ООП, декораторы и продвинутый синтаксис
+        </h1>
+        <p style="font-size: 1.4rem; color: #4b5563; margin-bottom: 40px;">Проект урока: Бэкенд для "Сайта летней школы Квант"</p>
+        <p style="font-size: 1.1rem; font-style: italic; color: #6b7280;">Кафедра программирования ЛФМШ "Квант"</p>
+      </div>
+    </div>
+
+    <!-- Слайд 2: План урока (Roadmap) -->
+    <div class="slide">
+      <div class="slide-header">
+        <h2>Сайт летней школы "Квант": Roadmap</h2>
+      </div>
+      <div class="slide-body">
+        <div class="columns">
+          <div class="column">
+            <ul>
+              <li><strong>*args и **kwargs:</strong> Парсер гибких конфигурационных настроек нашего сайта.</li>
+              <li><strong>ООП (User & Teacher):</strong> Моделирование пользователей школы, инкапсуляция почты и ролей через <code>@property</code>.</li>
+              <li><strong>ООП (Event):</strong> Мероприятия школы, dunder-методы <code>__str__</code> и <code>__repr__</code>.</li>
+            </ul>
+          </div>
+          <div class="column">
+            <ul>
+              <li><strong>Декоратор @requires_role:</strong> Разграничение прав доступа к страницам и действиям на сайте.</li>
+              <li><strong>Datetime:</strong> Работа с расписанием мероприятий в UTC и расчет их длительности.</li>
+              <li><strong>Модуль re (Regex):</strong> Валидация форм регистрации студентов (логин, email, телефон).</li>
+            </ul>
+          </div>
+        </div>
+        <div class="highlight-box success" style="margin-top: 20px;">
+          <strong>Наша цель:</strong> Написать продвинутое бэкенд-ядро для управления пользователями, доступом и расписанием сайта ЛФМШ "Квант".
+        </div>
+      </div>
+    </div>
+
+    <!-- Слайд 3: *args и **kwargs в настройках сайта -->
+    <div class="slide">
+      <div class="slide-header">
+        <h2>Гибкие настройки: *args и **kwargs</h2>
+      </div>
+      <div class="slide-body">
+        <div class="columns">
+          <div class="column" style="flex: 1.3;">
+            <p>Используем упаковку аргументов для гибкого конфигуратора сайта:</p>
+            <pre style="font-size: 0.85rem;"><code class="language-python">def configure_site(site_name, *flags, **settings):
+    print(f"Сайт: {site_name}")
+    print(f"Активные режимы (args): {flags}") # Кортеж
+    print(f"Параметры сайта (kwargs): {settings}") # Словарь
+
+# Вызов с разными наборами данных:
+configure_site("Квант-2026", "DEBUG_MODE", "MAINTENANCE", 
+               port=8000, theme="light", max_users=150)
+# args: ('DEBUG_MODE', 'MAINTENANCE')
+# kwargs: {'port': 8000, 'theme': 'light', 'max_users': 150}</code></pre>
+          </div>
+          <div class="column" style="flex: 0.7;">
+            <div class="highlight-box warning">
+              <h4 style="margin-bottom: 8px;">Суть распаковки</h4>
+              <p><code>*args</code> собирает <i>позиционные</i> аргументы в <b>tuple</b>.<br>
+              <code>**kwargs</code> собирает <i>именованные</i> аргументы в <b>dict</b>.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Слайд 4: ООП. Классы User и Teacher (Инкапсуляция) -->
+    <div class="slide">
+      <div class="slide-header">
+        <h2>Моделирование пользователей: User и Teacher</h2>
+      </div>
+      <div class="slide-body">
+        <p>Используем защищенные атрибуты (<code>_email</code>) и декоратор <code>@property</code> для валидации:</p>
+        <pre style="font-size: 0.8rem; margin: 5px 0;"><code class="language-python">class User:
+    def __init__(self, username, email, role="student"):
+        self.username = username
+        self._email = email # Защищенное поле
+        self.role = role
+
+    @property
+    def email(self):
+        return self._email.lower()
+
+    @email.setter
+    def email(self, new_email):
+        if "@" not in new_email:
+            raise ValueError("Некорректный адрес почты")
+        self._email = new_email</code></pre>
+        <p style="font-size: 1rem; color: #555;">Сеттер перехватывает попытку изменения: <code>user.email = "new@kvant.ru"</code> и валидирует её.</p>
+      </div>
+    </div>
+
+    <!-- Слайд 5: ООП. Наследование и полиморфизм -->
+    <div class="slide">
+      <div class="slide-header">
+        <h2>Наследование: Класс Teacher</h2>
+      </div>
+      <div class="slide-body">
+        <p>Наследуем <code>Teacher</code> от <code>User</code>, расширяя его полями учебного предмета:</p>
+        <pre style="font-size: 0.8rem; margin: 5px 0;"><code class="language-python">class Teacher(User):
+    def __init__(self, username, email, subject):
+        # Вызов конструктора базового класса User
+        super().__init__(username, email, role="teacher")
+        self.subject = subject # Специализированное поле преподавателя
+
+    # Полиморфизм: переопределяем строковое представление
+    def __str__(self):
+        return f"Преподаватель {self.username} (Предмет: {self.subject})"
+
+teacher = Teacher("alex_phys", "alex@kvant.ru", "Физика")
+print(teacher) # Выведет: Преподаватель alex_phys (Предмет: Физика)</code></pre>
+      </div>
+    </div>
+
+    <!-- Слайд 6: ООП. Мероприятия школы и Dunder методы -->
+    <div class="slide">
+      <div class="slide-header">
+        <h2>Мероприятия школы: Класс Event</h2>
+      </div>
+      <div class="slide-body">
+        <p>Класс <code>Event</code> использует dunder-методы для вывода в логи и списки:</p>
+        <pre style="font-size: 0.8rem; margin: 5px 0;"><code class="language-python">class Event:
+    def __init__(self, name, speaker, start_time):
+        self.name = name
+        self.speaker = speaker # Объект User или Teacher
+        self.start_time = start_time # datetime
+
+    def __str__(self):
+        # Понятно пользователям (print)
+        return f"Событие '{self.name}' (Спикер: {self.speaker.username})"
+
+    def __repr__(self):
+        # Детально разработчикам (отладка)
+        return f"Event(name='{self.name}', speaker={repr(self.speaker)})"</code></pre>
+      </div>
+    </div>
+
+    <!-- Слайд 7: Функции как объекты первого класса -->
+    <div class="slide">
+      <div class="slide-header">
+        <h2>Функции высшего порядка и Замыкания</h2>
+      </div>
+      <div class="slide-body">
+        <div class="columns">
+          <div class="column">
+            <p>В Python функции — это <b>объекты первого класса</b>:</p>
+            <ul>
+              <li>Их можно записывать в переменные.</li>
+              <li>Передавать как аргументы в другие функции.</li>
+              <li>Возвращать из функций.</li>
+            </ul>
+            <p><b>Замыкание (closure)</b> — функция, которая помнит переменные из своего внешнего контекста (области видимости), даже когда внешняя функция завершила работу.</p>
+          </div>
+          <div class="column">
+            <pre style="font-size: 0.8rem; margin: 0;"><code class="language-python">def make_notifier(prefix):
+    # Внутренняя функция-замыкание
+    def notify(message):
+        print(f"[{prefix}] {message}")
+    return notify
+
+info_notify = make_notifier("КВАНТ-ИНФО")
+info_notify("Обед через 10 минут!")
+# Вывод: [КВАНТ-ИНФО] Обед через 10 минут!</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Слайд 8: Декораторы: Защита страниц сайта -->
+    <div class="slide">
+      <div class="slide-header">
+        <h2>Декоратор ролей: @requires_role</h2>
+      </div>
+      <div class="slide-body">
+        <p>Декоратор с параметром оборачивает представление и проверяет роль пользователя:</p>
+        <pre style="font-size: 0.77rem; margin: 5px 0;"><code class="language-python">def requires_role(required_role):
+    def decorator(func):
+        def wrapper(user, *args, **kwargs):
+            if user.role != required_role:
+                return f"Ошибка 403: Доступ запрещен для {user.username} (нужна роль {required_role})"
+            return func(user, *args, **kwargs)
+        return wrapper
+    return decorator
+
+@requires_role("teacher")
+def create_event(user, event_name):
+    return f"Событие '{event_name}' успешно создано преподавателем {user.username}"</code></pre>
+      </div>
+    </div>
+
+    <!-- Слайд 9: Время и Даты в расписании (datetime) -->
+    <div class="slide">
+      <div class="slide-header">
+        <h2>Время проведения событий (datetime)</h2>
+      </div>
+      <div class="slide-body">
+        <div class="columns">
+          <div class="column" style="flex: 1.1;">
+            <p>Для корректного расписания используем модуль <code>datetime</code> и временную зону UTC:</p>
+            <ul>
+              <li>Парсинг строки времени: <code>strptime</code>.</li>
+              <li>Форматирование в строку: <code>strftime</code>.</li>
+              <li>Операции со временем возвращают объект <code>timedelta</code>.</li>
+            </ul>
+          </div>
+          <div class="column" style="flex: 0.9;">
+            <pre style="font-size: 0.8rem; margin: 0;"><code class="language-python">from datetime import datetime, timezone, timedelta
+
+# Текущее время в UTC
+now = datetime.now(timezone.utc)
+
+# Парсинг времени лекции
+lecture_time = datetime.strptime(
+    "2026-06-26 10:00:00", 
+    "%Y-%m-%d %H:%M:%S"
+).replace(tzinfo=timezone.utc)
+
+# Разница во времени
+time_left = lecture_time - now
+print(f"До лекции осталось: {time_left}")</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Слайд 10: Регулярные выражения (re) -->
+    <div class="slide">
+      <div class="slide-header">
+        <h2>Регулярные выражения (Модуль re)</h2>
+      </div>
+      <div class="slide-body">
+        <div class="columns">
+          <div class="column">
+            <p><strong>Regex (регулярные выражения)</strong> — шаблоны для поиска и проверки строк.</p>
+            <p>Спецсимволы:</p>
+            <ul>
+              <li><code>^</code> / <code>$</code> — начало / конец строки.</li>
+              <li><code>\d</code> — цифра, <code>\w</code> — буква, цифра или знак _.</li>
+              <li><code>{m,n}</code> — от m до n повторений.</li>
+              <li><code>+</code> — 1 или более, <code>*</code> — 0 или более.</li>
+            </ul>
+          </div>
+          <div class="column">
+            <p>Валидация регистрации на сайте:</p>
+            <pre style="font-size: 0.8rem; margin: 0;"><code class="language-python">import re
+
+# Логин: от 3 до 15 латинских букв или цифр
+login_pattern = r"^[a-zA-Z0-9_]{3,15}$"
+
+def validate_username(username):
+    if re.match(login_pattern, username):
+        return True
+    return False
+
+print(validate_username("ivan_99")) # True
+print(validate_username("a!")) # False</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Слайд 11: Архитектура проекта "Сайт школы" -->
+    <div class="slide">
+      <div class="slide-header">
+        <h2>Архитектура ядра сайта школы Квант</h2>
+      </div>
+      <div class="slide-body">
+        <div class="highlight-box success">
+          <p>Все элементы работают согласованно в едином бэкенде:</p>
+          <ol>
+            <li><strong>Настройки:</strong> Конфигурируем сайт через <code>configure_site()</code>.</li>
+            <li><strong>Пользователи:</strong> Регистрируются с валидацией через <code>re</code>, создаются объекты классов <code>User</code> / <code>Teacher</code>.</li>
+            <li><strong>События:</strong> Создаются объекты <code>Event</code> с привязкой спикера и времени <code>datetime</code>.</li>
+            <li><strong>Доступ:</strong> Защита методов создания событий с помощью декоратора <code>@requires_role</code>.</li>
+          </ol>
+        </div>
+        <p style="text-align: center; font-weight: bold; color: var(--primary-color);">Теперь эти компоненты обеспечат работу всего сайта!</p>
+      </div>
+    </div>
+
+    <!-- Слайд 12: Итоги и переход к практике -->
+    <div class="slide">
+      <div class="slide-header">
+        <h2>Итоги урока и Практическая часть</h2>
+      </div>
+      <div class="slide-body">
+        <div class="columns">
+          <div class="column">
+            <h3 style="color: var(--primary-color); margin-bottom: 10px;">Мы научились:</h3>
+            <ul>
+              <li>Проектировать гибкие функции на <code>*args/**kwargs</code>.</li>
+              <li>Создавать и связывать классы (ООП), защищать данные (Инкапсуляция).</li>
+              <li>Писать декораторы прав доступа.</li>
+              <li>Работать с датами и регулярными выражениями.</li>
+            </ul>
+          </div>
+          <div class="column">
+            <div class="highlight-box success">
+              <h3 style="color: var(--secondary-color); margin-bottom: 10px;">💻 Практика на сегодня</h3>
+              <p>Напишем 6 практических задач: от гибкого парсера настроек сайта и валидатора регистрационных полей до менеджера конфликтов расписания лекций.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Кнопки управления -->
+    <div class="controls">
+      <button class="control-btn" id="prev-btn">&larr; Назад</button>
+      <button class="control-btn" id="fullscreen-btn">Экран [F]</button>
+      <button class="control-btn" id="next-btn">Вперед &rarr;</button>
+    </div>
+
+    <!-- Счетчик и прогресс-бар -->
+    <div class="slide-counter" id="slide-counter">1 / 12</div>
+    <div class="progress-container">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+  </div>
+
+</body>
+</html>
