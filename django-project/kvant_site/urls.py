@@ -21,5 +21,4 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     # path(route, view, name=None)
     path('', include('main.urls'))
-
 ]
