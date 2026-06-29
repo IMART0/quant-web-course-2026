@@ -12,6 +12,8 @@
 
         {% for slug, description in courses %}
             <li><a href="courses/{{ slug }}/">{{ slug }}</a></li>
+        {% empty %}
+            <li>Курсов нет</li>
         {% endfor %}
     </ul>
 </body>
