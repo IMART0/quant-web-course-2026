@@ -73,7 +73,7 @@ feature/arsen
 
 ```text
 .
-├── backend/              # Django-проект
+├── project/              # Django-проект
 ├── lessons/              # Материалы занятий
 ├── presentations/        # HTML-презентации
 ├── examples/             # Примеры кода
