@@ -4,10 +4,10 @@ from django.http import Http404
 from django.http import HttpResponse
 
 COURSES = {
-    # "Python": "Здесь изучаем питон",
-    # "plusy": "Здесь изучаем плюсы",
-    # "Super_course": "Здесь изучаем что такое супер",
-    # "Tatar_language": "учим татарский"
+    "Python": "Здесь изучаем питон",
+    "plusy": "Здесь изучаем плюсы",
+    "Super_course": "Здесь изучаем что такое супер",
+    "Tatar_language": "учим татарский"
 }
 
 TEACHER = {
@@ -16,7 +16,7 @@ TEACHER = {
 
 def main_page(request):
 
-    return render(request, './base.html', context={
+    return render(request, './main_page.html', context={
         'courses': list(COURSES.items()),
         'teacher': TEACHER
     })
