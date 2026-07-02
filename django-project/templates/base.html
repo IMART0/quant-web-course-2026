@@ -5,11 +5,14 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %} {% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
 
-<header>
-    <img width="25px" src="{% static '/images/kvant-logo.png' %}" alt="Логотип">
+<header class="header">
+    <div class="logo-wrapper">
+        <img src="{% static '/images/kvant-logo.png' %}" alt="Логотип">
+    </div>
     <span>Квант</span>
 </header>
 
